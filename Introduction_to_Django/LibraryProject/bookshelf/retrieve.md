@@ -1,6 +1,6 @@
 from bookshelf.models import Book
 
-retrieve_books = Book.objects.get()
+retrieve_books = Book.objects.get(title = "1984")
 print(retrieve_books)
 
 success message:
