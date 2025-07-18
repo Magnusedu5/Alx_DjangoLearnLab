@@ -8,6 +8,6 @@ def list_books(request):
     return render (request, 'relationship_app/list_books.html')
 
 
-class bookviews(DetailView):
+class Bookviews(DetailView):
     model = Library
     template_name = 'relationship_app/library_detail.html'
