@@ -8,4 +8,4 @@ library_name = "State Library"
 library = Library.objects.get(name=library_name) 
 books_in_library = library.books.all()
 
-Librarian.objects.get(library)
+Librarian.objects.get(library=library_name)
