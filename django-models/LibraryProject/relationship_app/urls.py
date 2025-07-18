@@ -10,7 +10,7 @@ urlpatterns = [
 #user login
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
-from .views import RegisterView
+from . import views
    
 
 urlpatterns = [
