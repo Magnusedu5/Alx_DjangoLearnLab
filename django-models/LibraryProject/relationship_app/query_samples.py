@@ -1,4 +1,4 @@
-from relationship_app.models import Author, Book
+from relationship_app.models import Author, Book, Library, Librarian
 
 author_name = "Chinua Achebe"
 author = Author.objects.get(name=author_name)
@@ -8,5 +8,4 @@ library_name = "State Library"
 library = Library.objects.get(name=library_name) 
 books_in_library = library.books.all()
 
-library = Library.objects.get(name="State Library")
-librarian = library.librarian
+librarian = Librarian.objects.get(Library=library_name)
