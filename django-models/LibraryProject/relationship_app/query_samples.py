@@ -1,6 +1,7 @@
 from relationship_app.models import Author, Book
 
-author = Author.objects.get(name="Chinua Achebe")
+author_name = "Chinua Achebe"
+author = Author.objects.get(name=author_name)
 books = Book.objects.filter(author=author)
 
 library_name = "State Library"
