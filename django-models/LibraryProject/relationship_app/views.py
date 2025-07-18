@@ -4,7 +4,7 @@ from django.views.generic import ListView
 
 # Create your views here.
 def list_books(request):
-    Book.object.all()
+    Book.objects.all()
     return render (request, 'relationship_app/list_books.html')
 
 
