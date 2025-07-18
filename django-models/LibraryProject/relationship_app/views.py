@@ -24,6 +24,5 @@ class RegisterView(CreateView):
     template_name = 'relationship_app/register.html'
 
 
-    def get(self, request, *args, **kwargs):
-        print("GET request received")  # This will show in your terminal
-        return super().get(request, *args, **kwargs)
+    def register(request, *args, **kwargs):
+    return RegisterView.as_view()(request, *args, **kwargs)

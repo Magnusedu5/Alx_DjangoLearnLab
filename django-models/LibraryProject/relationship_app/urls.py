@@ -20,7 +20,7 @@ urlpatterns = [
          ),
 
     path('register/', 
-         RegisterView.as_view(), 
+         views.register,
          name='register'
          ),
 
