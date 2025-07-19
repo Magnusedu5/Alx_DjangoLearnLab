@@ -125,3 +125,4 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/relationship/login/'
+LOGIN_REDIRECT_URL = '/relationship/admin/', '/relationship/member/', '/relationship/librarian/'
