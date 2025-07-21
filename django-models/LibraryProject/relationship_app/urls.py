@@ -19,7 +19,7 @@ urlpatterns = [
     path('delete_book/<int:book_id>/', views.delete_book, name='delete_book'),
 
     # Authentication views
-    path('login/', LoginView.as_view(emplate_name='relationship_app/login.html'), name='login'),
+    path('login/', LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
     path('register/', views.register, name='register'),
 
