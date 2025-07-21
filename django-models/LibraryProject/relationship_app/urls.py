@@ -1,15 +1,8 @@
 from django.urls import path
 from django.contrib.auth.views import LogoutView
 from . import views
-from .views import (
-    list_books,
-    LibraryDetailView,
-    register,
-    admin_view,
-    librarian_view,
-    member_view,
-    CustomLoginView  # use this instead of LoginView
-)
+from .views import list_books, LibraryDetailView, register, admin_view, librarian_view, member_view, CustomLoginView  # use this instead of LoginView
+
 
 urlpatterns = [
     # Book-related views
