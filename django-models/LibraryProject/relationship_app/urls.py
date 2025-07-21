@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth.views import LogoutView
 from . import views
-from .views import list_books, LibraryDetailView, register, admin_view, librarian_view, member_view, CustomLoginView  # use this instead of LoginView
+from .views import list_books, LibraryDetailView, register, admin_view, librarian_view, member_view, LoginView
 
 
 urlpatterns = [
@@ -19,9 +19,9 @@ urlpatterns = [
     path('delete_book/<int:book_id>/', views.delete_book, name='delete_book'),
 
     # Authentication views
-    path('login/', CustomLoginView.as_view(), name='login'),  # 👈 use your custom login
+    path('login/', LoginView.as_view(emplate_name='relationship_app/login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
-    path('register/', register, name='register'),
+    path('register/', views.register, name='register'),
 
     # Role-based views
     path('admin/', admin_view, name='admin_view'),
