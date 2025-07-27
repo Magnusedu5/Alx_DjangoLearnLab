@@ -126,4 +126,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/relationship/login/'
 LOGIN_REDIRECT_URL = '/relationship/admin/', '/relationship/member/', '/relationship/librarian/'
-AUTH_USER_MODEL = 'relationship_app.CustomUser'
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
