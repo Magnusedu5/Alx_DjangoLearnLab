@@ -11,13 +11,13 @@ from .forms import ExampleForm
 @permission_required('bookshelf.can_view', raise_exception=True)
 def book_list(request):
     books = Book.objects.all()
-    return render(request, 'books/list.html', {'books': books})
+    return render(request, 'books/book_list.html', {'books': books})
 
 
 @permission_required('bookshelf.can_edit', raise_exception=True)
 def edit_book(request, book_id):
     book = Book.objects.get(pk=book_id)
-    form = BookForm(request.POST or None, instance=book)
+    form = ExampleForm(request.POST or None, instance=book)
     if form.is_valid():
         form.save()
         return redirect('book-list')
