@@ -11,6 +11,16 @@ class Book(models.Model):
         default=1  # 👈 make sure this user exists
     )
 
+    class Meta:
+        permissions = [
+            ("can_view_book", "Can view book"),
+            ("can_create_book", "Can create book"),
+            ("can_edit_book", "Can edit book"),
+            ("can_delete_book", "Can delete book"),
+        ]
+
+    def __str__(self):
+        return self.title
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
