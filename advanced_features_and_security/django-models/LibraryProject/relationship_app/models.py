@@ -10,7 +10,7 @@ class Author(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=200, default="Null")
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
+    user = models.ForeignKey(on_delete=models.CASCADE, default=1)
 
     class Meta:
         permissions = [
@@ -65,12 +65,3 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     instance.userprofile.save()
 
-
-from django.contrib.auth.models import AbstractUser
-
-class CustomUser(AbstractUser):
-    date_of_birth = models.DateField(null=True, blank=True)
-    profile_photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
-
-    def __str__(self):
-        return self.username
