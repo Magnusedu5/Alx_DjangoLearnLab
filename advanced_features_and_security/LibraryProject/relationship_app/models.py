@@ -10,7 +10,6 @@ class Author(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=200, default="Null")
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    user = models.ForeignKey(on_delete=models.CASCADE, default=1)
 
     class Meta:
         permissions = [

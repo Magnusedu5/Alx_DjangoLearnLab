@@ -26,3 +26,11 @@ def edit_book(request, book_id):
 def delete_book(request, book_id):
     Book.objects.get(pk=book_id).delete()
     return redirect('book-list')
+
+from .models import Book
+from django.shortcuts import render
+
+def search_books(request):
+    query = request.GET.get('q', '')
+    results = Book.objects.filter(title__icontains=query)
+    return render(request, 'bookshelf/list_books.html', {'books': results})
