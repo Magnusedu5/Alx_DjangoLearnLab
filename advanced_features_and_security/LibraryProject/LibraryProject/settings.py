@@ -26,7 +26,9 @@ SECRET_KEY = 'django-insecure-202kk^ipr)!%%$$v%b5%-p4b8yatc_@$+-k)vr0tafg!5ubup@
 DEBUG = False
 
 # Only allow your domain
-ALLOWED_HOSTS = ['bookstore.com']  # replace with actual domain
+ALLOWED_HOSTS = ['bookstore.com', 'www.bookstore.com', '127.0.0.1']  # replace with actual domain
+
+SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
 
 # Security Headers
 SECURE_BROWSER_XSS_FILTER = True
