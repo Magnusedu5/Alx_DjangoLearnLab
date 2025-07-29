@@ -29,6 +29,7 @@ DEBUG = False
 ALLOWED_HOSTS = ['bookstore.com', 'www.bookstore.com', '127.0.0.1']  # replace with actual domain
 
 SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Security Headers
 SECURE_BROWSER_XSS_FILTER = True
