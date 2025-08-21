@@ -47,17 +47,17 @@ from .forms import PostForm
 class BlogListView(generic.ListView):
     model = Post
     fields = ["title", "content", "publication_date", "author"]
-    template_name = "list.html"
+    template_name = "/home/magnus/Alx_DjangoLearnLab/django_blog/blog/templates/blog/post_list.html"
 
 class BlogDetailView(generic.DetailView):
     model = Post
     fields = ["title", "content", "publication_date", "author"]
-    template_name = "details.html"
+    template_name = "/home/magnus/Alx_DjangoLearnLab/django_blog/blog/templates/blog/post_detail.html"
 
 class BlogCreateView(LoginRequiredMixin, generic.CreateView):
     model = Post
     fields = ["title", "content", "publication_date", "author"]
-    template_name = "create.html"
+    template_name = "/home/magnus/Alx_DjangoLearnLab/django_blog/blog/templates/blog/post_form.html"
     permission_required = "blog.add_post"
     form_class = PostForm
 
@@ -68,9 +68,9 @@ class BlogCreateView(LoginRequiredMixin, generic.CreateView):
 class BlogUpdateView(generic.UpdateView):
     model = Post
     fields = ["title", "content", "publication_date", "author"]
-    template_name = "update.html"
+    template_name = "/home/magnus/Alx_DjangoLearnLab/django_blog/blog/templates/blog/post_form.html"
 
 class BlogDeleteView(generic.DeleteView):
     model = Post
     fields = ["title", "content", "publication_date", "author"]
-    template_name = "delete.html"
+    template_name = "/home/magnus/Alx_DjangoLearnLab/django_blog/blog/templates/blog/post_confirm_delete.html"
