@@ -42,7 +42,7 @@ def profile(request):
 from django.views import generic
 from .models import Post
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 
 class BlogListView(generic.ListView):
     model = Post
@@ -55,6 +55,24 @@ class BlogDetailView(generic.DetailView):
     model = Post
     fields = ["title", "content", "publication_date", "author"]
     template_name = "/home/magnus/Alx_DjangoLearnLab/django_blog/blog/templates/blog/post_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["comments"] = self.object.comments.all().order_by("-created_at")  # all comments for this post
+        context["form"] = CommentForm()
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        """Handle new comment submission"""
+        self.object = self.get_object()
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = self.object
+            comment.author = request.user
+            comment.save()
+            return redirect("post-detail", pk=self.object.pk)
+        return self.get(request, *args, **kwargs)
 
 class BlogCreateView(LoginRequiredMixin, generic.CreateView):
     model = Post
@@ -78,3 +96,35 @@ class BlogDeleteView(UserPassesTestMixin, LoginRequiredMixin, PermissionRequired
     fields = ["title", "content", "publication_date", "author"]
     template_name = "/home/magnus/Alx_DjangoLearnLab/django_blog/blog/templates/blog/post_confirm_delete.html"
     permission_required = "blog.delete_post"
+
+
+
+
+
+
+from django.urls import reverse_lazy
+from .models import Comment
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+    model = Comment
+    fields = ["content"]
+    template_name = "blog/comment_form.html"
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.author  # Only author can edit
+
+    def get_success_url(self):
+        return reverse_lazy("post-detail", kwargs={"pk": self.object.post.pk})
+
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+    model = Comment
+    template_name = "blog/comment_confirm_delete.html"
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.author  # Only author can delete
+
+    def get_success_url(self):
+        return reverse_lazy("post-detail", kwargs={"pk": self.object.post.pk})
