@@ -12,9 +12,9 @@ urlpatterns = [
     path("login/", views.LoginView.as_view(template_name="/home/magnus/Alx_DjangoLearnLab/django_blog/blog/templates/blog/registration/login.html"), name="login"),
     path("logout/", views.LogoutView.as_view(), name="logout"),
 
-    path("posts/", BlogListView.as_view(), name="post-list"),
-    path("posts/new/", BlogCreateView.as_view(), name="post-create"),
-    path("posts/<int:pk>/", BlogDetailView.as_view(), name="post-detail"),
-    path("posts/<int:pk>/update/", BlogUpdateView.as_view(), name="post-update"),
-    path("posts/<int:pk>/delete/", BlogDeleteView.as_view(), name="post-delete"),
+    path("post/", BlogListView.as_view(), name="post-list"),
+    path("post/new/", BlogCreateView.as_view(), name="post-create"),
+    path("post/<int:pk>/", BlogDetailView.as_view(), name="post-detail"),
+    path("post/<int:pk>/update/", BlogUpdateView.as_view(), name="post-update"),
+    path("post/<int:pk>/delete/", BlogDeleteView.as_view(), name="post-delete"),
 ]
