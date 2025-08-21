@@ -56,24 +56,7 @@ class BlogDetailView(generic.DetailView):
     fields = ["title", "content", "publication_date", "author"]
     template_name = "/home/magnus/Alx_DjangoLearnLab/django_blog/blog/templates/blog/post_detail.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["comments"] = self.object.comments.all().order_by("-created_at")  # all comments for this post
-        context["form"] = CommentForm()
-        return context
     
-    def post(self, request, *args, **kwargs):
-        """Handle new comment submission"""
-        self.object = self.get_object()
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = self.object
-            comment.author = request.user
-            comment.save()
-            return redirect("post-detail", pk=self.object.pk)
-        return self.get(request, *args, **kwargs)
-
 class BlogCreateView(LoginRequiredMixin, generic.CreateView):
     model = Post
     fields = ["title", "content", "publication_date", "author"]
@@ -100,31 +83,51 @@ class BlogDeleteView(UserPassesTestMixin, LoginRequiredMixin, PermissionRequired
 
 
 
-
-
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import CreateView, UpdateView, DeleteView
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
-from .models import Comment
+from .models import Comment, Post
+from .forms import CommentForm
 
-class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+
+class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
-    fields = ["content"]
-    template_name = "blog/comment_form.html"
+    form_class = CommentForm
+    template_name = "comment_form.html"
 
-    def test_func(self):
-        comment = self.get_object()
-        return self.request.user == comment.author  # Only author can edit
+    def form_valid(self, form):
+        # attach logged-in user
+        form.instance.author = self.request.user
+        # get the related post
+        post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        form.instance.post = post
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("post-detail", kwargs={"pk": self.kwargs['pk']})
+
+
+class CommentUpdateView(LoginRequiredMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = "comment_form.html"
+
+    def get_queryset(self):
+        # only allow author to edit their own comments
+        return Comment.objects.filter(author=self.request.user)
 
     def get_success_url(self):
         return reverse_lazy("post-detail", kwargs={"pk": self.object.post.pk})
 
 
-class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+class CommentDeleteView(LoginRequiredMixin, DeleteView):
     model = Comment
-    template_name = "blog/comment_confirm_delete.html"
+    template_name = "comment_confirm_delete.html"
 
-    def test_func(self):
-        comment = self.get_object()
-        return self.request.user == comment.author  # Only author can delete
+    def get_queryset(self):
+        # only allow author to delete their own comments
+        return Comment.objects.filter(author=self.request.user)
 
     def get_success_url(self):
         return reverse_lazy("post-detail", kwargs={"pk": self.object.post.pk})
