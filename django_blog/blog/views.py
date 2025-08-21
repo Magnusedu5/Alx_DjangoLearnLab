@@ -2,7 +2,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, UserUpdateForm, ProfileUpdateForm
+from django.contrib import messages
 
 def register(request):
     if request.method == "POST":
@@ -15,6 +16,61 @@ def register(request):
         form = CustomUserCreationForm()
     return render(request, "/home/magnus/Alx_DjangoLearnLab/django_blog/blog/templates/blog/register.html", {"form": form})
 
+
 @login_required
 def profile(request):
-    return render(request, "/home/magnus/Alx_DjangoLearnLab/django_blog/blog/templates/blog/profile.html")
+    if request.method == "POST":
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, "Your profile has been updated ✔️")
+            return redirect("profile")
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {
+        "u_form": u_form,
+        "p_form": p_form
+    }
+    return render(request, "/home/magnus/Alx_DjangoLearnLab/django_blog/blog/templates/blog/profile.html", context)
+
+
+from django.views import generic
+from .models import Post
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from .forms import PostForm
+
+class BlogListView(generic.ListView):
+    model = Post
+    fields = ["title", "content", "publication_date", "author"]
+    template_name = "list.html"
+
+class BlogDetailView(generic.DetailView):
+    model = Post
+    fields = ["title", "content", "publication_date", "author"]
+    template_name = "details.html"
+
+class BlogCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Post
+    fields = ["title", "content", "publication_date", "author"]
+    template_name = "create.html"
+    permission_required = "blog.add_post"
+    form_class = PostForm
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user # set author automatically
+        return super().form_valid(form)
+
+class BlogUpdateView(generic.UpdateView):
+    model = Post
+    fields = ["title", "content", "publication_date", "author"]
+    template_name = "update.html"
+
+class BlogDeleteView(generic.DeleteView):
+    model = Post
+    fields = ["title", "content", "publication_date", "author"]
+    template_name = "delete.html"
