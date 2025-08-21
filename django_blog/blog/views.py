@@ -41,13 +41,15 @@ def profile(request):
 
 from django.views import generic
 from .models import Post
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from .forms import PostForm
 
 class BlogListView(generic.ListView):
     model = Post
     fields = ["title", "content", "publication_date", "author"]
     template_name = "/home/magnus/Alx_DjangoLearnLab/django_blog/blog/templates/blog/post_list.html"
+    permission_required = "blog.view_post"
+
 
 class BlogDetailView(generic.DetailView):
     model = Post
@@ -65,12 +67,14 @@ class BlogCreateView(LoginRequiredMixin, generic.CreateView):
         form.instance.author = self.request.user # set author automatically
         return super().form_valid(form)
 
-class BlogUpdateView(generic.UpdateView):
+class BlogUpdateView(UserPassesTestMixin, LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView):
     model = Post
     fields = ["title", "content", "publication_date", "author"]
     template_name = "/home/magnus/Alx_DjangoLearnLab/django_blog/blog/templates/blog/post_form.html"
+    permission_required = "blog.change_post"
 
-class BlogDeleteView(generic.DeleteView):
+class BlogDeleteView(UserPassesTestMixin, LoginRequiredMixin, PermissionRequiredMixin, generic.DeleteView):
     model = Post
     fields = ["title", "content", "publication_date", "author"]
     template_name = "/home/magnus/Alx_DjangoLearnLab/django_blog/blog/templates/blog/post_confirm_delete.html"
+    permission_required = "blog.delete_post"
