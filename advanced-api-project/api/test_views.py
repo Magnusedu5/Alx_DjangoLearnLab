@@ -19,8 +19,21 @@ class BookAPITestCase(APITestCase):
         data = {"title": "Updated Title", "publication_year": 2021, "author": self.author.id}
         response = self.client.put(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["title"], "Updated Title")
+
 
     def test_delete_book(self):
         url = reverse("delete-book", args=[self.book.id])
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+
+    def test_create_book(self):
+        data = {"title": "New Book", "author": self.author.id, "published_date": "2023-01-01"}
+        response = self.client.post(reverse("list-books"), data)
+        
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        # ✅ Now check response body
+        self.assertEqual(response.data["title"], "New Book")
+        self.assertEqual(response.data["author"], self.author.id)
+
