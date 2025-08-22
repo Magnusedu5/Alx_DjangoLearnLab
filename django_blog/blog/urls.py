@@ -7,7 +7,7 @@ from .views import (
 )
 from django.urls import path
 from .views import BlogDetailView, CommentUpdateView, CommentDeleteView, posts_by_tag
-
+from . import views
 
     
 
@@ -29,5 +29,7 @@ urlpatterns = [
 
     path("tag/<slug:slug>/", posts_by_tag, name="post-by-tag"),
 
-
+    path("search/", views.search_posts, name="search-posts"),
+    path("tags/<str:tag_name>/", views.posts_by_tag, name="posts-by-tag"),
 ]
+
