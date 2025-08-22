@@ -131,3 +131,12 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy("post-detail", kwargs={"pk": self.object.post.pk})
+
+from django.shortcuts import render, get_object_or_404
+from .models import Post
+from taggit.models import Tag
+
+def posts_by_tag(request, slug):
+    tag = get_object_or_404(Tag, slug=slug)
+    posts = Post.objects.filter(tags__in=[tag])
+    return render(request, "posts_by_tag.html", {"tag": tag, "posts": posts})

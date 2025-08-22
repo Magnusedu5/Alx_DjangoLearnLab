@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from taggit.managers import TaggableManager
+
 
 # Create your models here.
 class Post(models.Model):
@@ -10,6 +12,8 @@ class Post(models.Model):
     published_date = models.DateField(auto_now_add=True)
     author = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
 
+    tags = TaggableManager()
+    
     def __str__(self):
         return self.title
 
@@ -38,3 +42,10 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.author.username} on {self.post.title}"
+
+class Tag(models.Model):
+    name = models.TextField()
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name

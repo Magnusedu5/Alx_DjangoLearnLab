@@ -29,13 +29,20 @@ class ProfileUpdateForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ["title", "content"]
+        fields = ["title", "content", "tags"]
 
     def validate_title(self):
         title = self.cleaned_data.get("title")
         if len(title) < 5:
             raise forms.ValidationError("Title must be at least 5 characters long.")
         return title
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Optional: make tags more user-friendly
+        self.fields["tags"].widget = forms.TextInput(
+            attrs={"placeholder": "Add tags separated by commas"}
+        )
 
 class CommentForm(forms.ModelForm):
     class Meta:
