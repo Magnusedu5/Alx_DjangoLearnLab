@@ -30,7 +30,10 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ["title", "content", "tags"]
-
+        widgets = {
+            "tags": forms.TextInput(attrs={"placeholder": "Add tags separated by commas"}),
+        }
+        
     def validate_title(self):
         title = self.cleaned_data.get("title")
         if len(title) < 5:
