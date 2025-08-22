@@ -6,7 +6,7 @@ from .views import (
     BlogUpdateView, BlogDeleteView
 )
 from django.urls import path
-from .views import BlogDetailView, CommentUpdateView, CommentDeleteView, posts_by_tag
+from .views import BlogDetailView, CommentUpdateView, CommentDeleteView, PostByTagListView
 from . import views
 
     
@@ -27,7 +27,7 @@ urlpatterns = [
     path("comment/<int:pk>/update/", CommentUpdateView.as_view(), name="comment-edit"),
     path("comment/<int:pk>/delete/", CommentDeleteView.as_view(), name="comment-delete"),
 
-    path("tag/<slug:slug>/", posts_by_tag, name="post-by-tag"),
+    path("tag/<slug:tag_slug>/", PostByTagListView.as_view(), name="post-by-tag"),
 
     path("search/", views.search_posts, name="search-posts"),
     path("tags/<str:tag_name>/", views.posts_by_tag, name="posts-by-tag"),

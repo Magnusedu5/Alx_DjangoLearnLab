@@ -84,7 +84,7 @@ class BlogDeleteView(UserPassesTestMixin, LoginRequiredMixin, PermissionRequired
 
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from .models import Comment, Post
@@ -136,10 +136,15 @@ from django.shortcuts import render, get_object_or_404
 from .models import Post
 from taggit.models import Tag
 
-def posts_by_tag(request, slug):
-    tag = get_object_or_404(Tag, slug=slug)
-    posts = Post.objects.filter(tags__in=[tag])
-    return render(request, "posts_by_tag.html", {"tag": tag, "posts": posts})
+
+class PostByTagListView(ListView):
+    model = Tag
+    fields  = ["name", "post"]
+
+    def posts_by_tag(request, slug):
+        tag = get_object_or_404(Tag, slug=slug)
+        posts = Post.objects.filter(tags__in=[tag])
+        return render(request, "posts_by_tag.html", {"tag": tag, "posts": posts})
 
 
 from django.db.models import Q
