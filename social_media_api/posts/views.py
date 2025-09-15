@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from rest_framework import viewsets, permissions, filters
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer# Create your views here.
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.generics import ListAPIView
+
+
 
 class IsAuthorOrReadOnly(permissions.BasePermission):
     """
@@ -23,7 +26,7 @@ class PostViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
 
 
-    # ✅ Add filtering & search
+    # Add filtering & search
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ["title", "content"]   # exact match filtering
     search_fields = ["title", "content"]      # partial match search
@@ -40,3 +43,12 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # Automatically set the logged-in user as the author
         serializer.save(author=self.request.user)
+
+class FeedView(ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        following_users = user.following.all()
+        return Post.objects.filter(author__in=following_users).order_by("-created_at")
